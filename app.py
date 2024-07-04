@@ -1,10 +1,9 @@
 import streamlit as st
 import google.generativeai as genai
 import spacy
-import requests
 
 # Configure the Google Generative AI API
-GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY"
+GOOGLE_API_KEY = "AIzaSyDxSBgxRNK7icKH2jDHLGSbtdmVwPI8tnc"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-pro")
 
@@ -50,16 +49,6 @@ def generate_hotel_booking_links(hotel_name):
     agoda_link = f"https://www.agoda.com/search?city={hotel_name.replace(' ', '%20')}"
     return make_my_trip_link, ixigo_link, agoda_link
 
-def fetch_image_urls(query):
-    access_key = 'YOUR_UNSPLASH_ACCESS_KEY'
-    url = f'https://api.unsplash.com/search/photos?query={query}&client_id={access_key}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        images = data.get('results', [])
-        if images:
-            return [image['urls']['small'] for image in images[:3]]  # Fetch up to 3 images
-    return []
 
 # Custom CSS
 st.markdown("""
@@ -94,12 +83,12 @@ st.markdown("""
         font-size: 18px;
     }
     .stTextInput>div>input {
-        border: 1px solid #000000;
+        border: 1px solid #000;
         border-radius: 5px;
         padding: 5px;
     }
     .stNumberInput>div>input {
-        border: 1px solid #000000;
+        border: 1px solid #000;
         border-radius: 5px;
         padding: 5px;
     }
@@ -165,9 +154,8 @@ if st.button("Generate Itinerary"):
             for hotel in hotels:
                 make_my_trip_link, ixigo_link, agoda_link = generate_hotel_booking_links(hotel)
                 st.write(f"**{hotel}**")
-                image_urls = fetch_image_urls(hotel)
-                if image_urls:
-                    for img_url in image_urls:
-                        st.image(img_url, width=200)
                 st.markdown(f"[Book on MakeMyTrip]({make_my_trip_link})", unsafe_allow_html=True)
                 st.markdown(f"[Book on Ixigo]({ixigo_link})", unsafe_allow_html=True)
+                st.markdown(f"[Book on Agoda]({agoda_link})", unsafe_allow_html=True)
+        except ValueError:
+            st.error("Please enter valid numbers for budget, days, and number of people.")
