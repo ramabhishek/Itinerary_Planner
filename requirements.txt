@@ -1,4 +1,5 @@
 --no-binary scipy scikit-learn
+--no-binary :all:
 numpy
 streamlit
 google-generativeai
