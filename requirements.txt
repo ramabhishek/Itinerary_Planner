@@ -1,7 +1,5 @@
---no-binary scipy scikit-learn
---no-binary :all:
-numpy
 streamlit
 google-generativeai
 spacy
 requests
+numpy==1.14.5
