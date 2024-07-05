@@ -1,4 +1,4 @@
 spacy==3.4.0
-streamlit
+streamlit==1.23.1
 google-generativeai
 requests
