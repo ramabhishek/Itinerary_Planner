@@ -2,3 +2,4 @@ spacy
 streamlit==1.23.1
 google-generativeai
 requests
+en_core_web_sm-3.1.0
