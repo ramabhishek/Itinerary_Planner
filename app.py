@@ -1,7 +1,7 @@
 # %%writefile app.py
 import streamlit as st
 import google.generativeai as genai
-import spacy
+import spacy as sp
 
 st.write("Hello")
 
