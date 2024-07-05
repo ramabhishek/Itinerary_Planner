@@ -128,35 +128,35 @@ with col1:
 with col2:
     people = st.text_input("Enter the number of people")
 
-if st.button("Generate Itinerary"):
-    with st.spinner("Generating your itinerary..."):
-        try:
-            budget = int(budget)
-            days = int(days)
-            people = int(people)
-            itinerary = get_itinerary(place, budget, days, people)
-            st.success("Itinerary generated!")
-            st.write(itinerary)
+# if st.button("Generate Itinerary"):
+#     with st.spinner("Generating your itinerary..."):
+#         try:
+#             budget = int(budget)
+#             days = int(days)
+#             people = int(people)
+#             itinerary = get_itinerary(place, budget, days, people)
+#             st.success("Itinerary generated!")
+#             st.write(itinerary)
 
-            # Extract places to visit from itinerary, excluding the main destination city
-            places_to_visit = extract_places(itinerary, place)
+#             # Extract places to visit from itinerary, excluding the main destination city
+#             places_to_visit = extract_places(itinerary, place)
 
-            st.write("### Transportation Options")
-            for place in places_to_visit:
-                ola_link, uber_link = generate_transport_links(place)
-                st.write(f"**To {place}**")
-                st.markdown(f"[Book Ola]({ola_link})", unsafe_allow_html=True)
-                st.markdown(f"[Book Uber]({uber_link})", unsafe_allow_html=True)
+#             st.write("### Transportation Options")
+#             for place in places_to_visit:
+#                 ola_link, uber_link = generate_transport_links(place)
+#                 st.write(f"**To {place}**")
+#                 st.markdown(f"[Book Ola]({ola_link})", unsafe_allow_html=True)
+#                 st.markdown(f"[Book Uber]({uber_link})", unsafe_allow_html=True)
 
-            # Extract hotels from the itinerary
-            hotels = extract_hotels(itinerary)
+#             # Extract hotels from the itinerary
+#             hotels = extract_hotels(itinerary)
 
-            st.write("### Hotel Booking Options and Attractions")
-            for hotel in hotels:
-                make_my_trip_link, ixigo_link, agoda_link = generate_hotel_booking_links(hotel)
-                st.write(f"**{hotel}**")
-                st.markdown(f"[Book on MakeMyTrip]({make_my_trip_link})", unsafe_allow_html=True)
-                st.markdown(f"[Book on Ixigo]({ixigo_link})", unsafe_allow_html=True)
-                st.markdown(f"[Book on Agoda]({agoda_link})", unsafe_allow_html=True)
-        except ValueError:
-            st.error("Please enter valid numbers for budget, days, and number of people.")
+#             st.write("### Hotel Booking Options and Attractions")
+#             for hotel in hotels:
+#                 make_my_trip_link, ixigo_link, agoda_link = generate_hotel_booking_links(hotel)
+#                 st.write(f"**{hotel}**")
+#                 st.markdown(f"[Book on MakeMyTrip]({make_my_trip_link})", unsafe_allow_html=True)
+#                 st.markdown(f"[Book on Ixigo]({ixigo_link})", unsafe_allow_html=True)
+#                 st.markdown(f"[Book on Agoda]({agoda_link})", unsafe_allow_html=True)
+#         except ValueError:
+#             st.error("Please enter valid numbers for budget, days, and number of people.")
