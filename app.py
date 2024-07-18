@@ -3,10 +3,8 @@ import streamlit as st
 import google.generativeai as genai
 import spacy
 
-# st.write("Hello")
-
 # Configure the Google Generative AI API
-GOOGLE_API_KEY = "AIzaSyDxSBgxRNK7icKH2jDHLGSbtdmVwPI8tnc"
+GOOGLE_API_KEY = "AIzaSyBQKHOW8f8PKkwHy9ZZcJI3ewg2HXIIqJI"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-pro")
 
@@ -18,32 +16,52 @@ def get_itinerary(place, budget, days, people):
     Can you suggest an itinerary with activities, top rated places to visit, dining options,
     and transportation options (including using Ola or Uber)?, also quote the price for each ride
     with a budget of {budget} for {days} days. You should recommend everything within the range such
-    that the total sum, including everything (hotel also), should be less than or equal to {budget}, at last give me a complete
-    summary of all my expenses and the total sum.
+    that the total sum, including everything (hotel also), should be less than or equal to {budget}, but try
+    to give the result as close as you can to the {budget}, at last give me a complete
+    summary of all my expenses and the total sum of everthing in the form of a table.
     """
     response = model.generate_content(prompt)
-    return response.text  
+    return response.text
 
 def extract_places(itinerary_text, exclude_place):
     doc = nlp(itinerary_text)
     exclude_place_lower = exclude_place.lower()
     places = [
-        ent.text for ent in doc.ents 
-        if ent.label_ == "GPE" and ent.text.lower() != exclude_place_lower and not any(keyword in ent.text.lower() for keyword in ["inr", "approx"])
+        ent.text for ent in doc.ents
+        if ent.label_ == "GPE" and ent.text.lower() != exclude_place_lower and not any(keyword in ent.text.lower() for keyword in ["inr", "approx","india"])
     ]
     return places
 
+# def extract_hotels(itinerary_text):
+#     doc = nlp(itinerary_text)
+#     hotels = [
+#         ent.text for ent in doc.ents
+#         if ent.label_ == "ORG" and not any(keyword in ent.text.lower() for keyword in ["inr", "approx", "india", "₹"])
+#     ]
+#     return hotels
+
 def extract_hotels(itinerary_text):
     doc = nlp(itinerary_text)
-    hotels = [
-        ent.text for ent in doc.ents 
-        if ent.label_ == "ORG" and not any(keyword in ent.text.lower() for keyword in ["inr", "approx", "india", "₹"])
+    
+    # Define a list of common keywords related to hotels
+    hotel_keywords = [
+        "hotel", "resort", "inn", "suites", "lodging", "motel", 
+        "hostel", "guest house", "bnb", "bed and breakfast", 
+        "villa", "apartments", "lodge", "spa"
     ]
+    
+    # Extract organizations and filter by hotel-related keywords
+    hotels = [
+        ent.text for ent in doc.ents
+        if ent.label_ == "ORG" and any(keyword in ent.text.lower() for keyword in hotel_keywords)
+    ]
+    
     return hotels
 
+
 def generate_transport_links(destination):
-    ola_link = f"https://book.olacabs.com/?drop_location={destination}"
-    uber_link = f"https://m.uber.com/ul/?action=setPickup&drop[latitude]={destination}"
+    ola_link = f"https://book.olacabs.com/?drop_location={destination.replace(' ', '%20')}"
+    uber_link = f"https://m.uber.com/ul/?action=setPickup&drop[latitude]={destination.replace(' ', '%20')}"
     return ola_link, uber_link
 
 def generate_hotel_booking_links(hotel_name):
@@ -153,7 +171,7 @@ if st.button("Generate Itinerary"):
             # Extract hotels from the itinerary
             hotels = extract_hotels(itinerary)
 
-            st.write("### Hotel Booking Options and Attractions")
+            st.write("### Hotel Booking Options")
             for hotel in hotels:
                 make_my_trip_link, ixigo_link, agoda_link = generate_hotel_booking_links(hotel)
                 st.write(f"**{hotel}**")
